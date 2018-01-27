@@ -7,6 +7,7 @@ var watch = require('node-watch');
 var redis = require('redis');
 
 var dot = require('dot');
+var https = require('https');
 var express = require('express');
 var bodyParser = require('body-parser');
 var compress = require('compression');
@@ -253,6 +254,12 @@ module.exports = function(logger){
         portalApi.handleApiRequest(req, res, next);
     });
 
+    // Let's Encrypt Acme Challenge Example
+    app.get('/.well-known/acme-challenge/5im_9T0TPcA3Grh0kZlijzS__2-5VQmAUbnL3hFfRjs', function(req, res, next){
+      res.type('text/plain');
+      res.send("5im_9T0TPcA3Grh0kZlijzS__2-5VQmAUbnL3hFfRjs.aUFP07XMIkK3_xVl0h6EpmBTFfzLGTBVjLQc-4_zpXI");
+    });
+
     app.post('/api/admin/:method', function(req, res, next){
         if (portalConfig.website
             && portalConfig.website.adminCenter
@@ -284,9 +291,19 @@ module.exports = function(logger){
     });
 
     try {
-        app.listen(portalConfig.website.port, portalConfig.website.host, function () {
+        if(portalConfig.website.ssl.enabled){
+          https.createServer({
+            key: fs.readFileSync(portalConfig.website.ssl.key),
+            cert: fs.readFileSync(portalConfig.website.ssl.cert),
+            ca: fs.readFileSync(portalConfig.website.ssl.ca),
+          }, app).listen(443, function(){
             logger.debug(logSystem, 'Server', 'Website started on ' + portalConfig.website.host + ':' + portalConfig.website.port);
-        });
+          });
+        } else {
+          app.listen(portalConfig.website.port, portalConfig.website.host, function () {
+              logger.debug(logSystem, 'Server', 'Website started on ' + portalConfig.website.host + ':' + portalConfig.website.port);
+          });
+        }
     }
     catch(e){
         logger.error(logSystem, 'Server', 'Could not start website on ' + portalConfig.website.host + ':' + portalConfig.website.port
