@@ -297,7 +297,7 @@ module.exports = function(logger){
             cert: fs.readFileSync(portalConfig.website.ssl.cert),
             ca: fs.readFileSync(portalConfig.website.ssl.ca),
           }, app).listen(443, function(){
-            logger.debug(logSystem, 'Server', 'Website started on ' + portalConfig.website.host + ':' + portalConfig.website.port);
+            logger.debug(logSystem, 'Server', 'Website started on ' + portalConfig.website.host + ':443');
           });
         } else {
           app.listen(portalConfig.website.port, portalConfig.website.host, function () {
