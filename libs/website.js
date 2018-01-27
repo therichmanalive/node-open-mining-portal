@@ -268,6 +268,13 @@ module.exports = function(logger){
 
     });
 
+    if(!websiteConfig.allowSearchEngine){
+      app.get('/robots.txt', function (req, res) {
+        res.type('text/plain');
+        res.send("User-agent: *\nDisallow: /");
+      });
+    }
+
     app.use(compress());
     app.use('/static', express.static('website/static'));
 

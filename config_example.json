@@ -35,6 +35,7 @@
         "host": "0.0.0.0",
         "port": 80,
         "stratumHost": "cryppit.com",
+        "allowSearchEngine": true,
         "stats": {
             "updateInterval": 60,
             "historicalRetention": 43200,
@@ -92,10 +93,10 @@
                     "diff": 0.001,
                     "varDiff": {
                         "minDiff": 0.001,
-                        "maxDiff": 1, 
-                        "targetTime": 15, 
-                        "retargetTime": 60, 
-                        "variancePercent": 30 
+                        "maxDiff": 1,
+                        "targetTime": 15,
+                        "retargetTime": 60,
+                        "variancePercent": 30
                     }
                 }
             }
